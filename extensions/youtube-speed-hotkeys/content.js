@@ -73,7 +73,11 @@
 
     video.playbackRate = video.playbackRate + delta;
     video.playbackRate = clamp(roundToHundredth(video.playbackRate), 0.05, 16);
-    showSpeedToast(video.playbackRate);
+    try {
+      showSpeedToast(video.playbackRate);
+    } catch (err) {
+      console.error("[ArcPack][YouTube Speed] Toast render failed:", err);
+    }
   }
 
   function showSpeedToast(rate) {
@@ -100,7 +104,7 @@
         pointerEvents: "none",
         boxShadow: "0 8px 24px rgba(0, 0, 0, 0.35)",
       });
-      document.documentElement.appendChild(toast);
+      (document.body || document.documentElement).appendChild(toast);
     }
     toast.textContent = `Speed: ${rate.toFixed(2)}x`;
     clearTimeout(showSpeedToast._timeoutId);
@@ -156,8 +160,14 @@
       event.ctrlKey === shortcut.ctrlKey &&
       event.metaKey === shortcut.metaKey &&
       event.shiftKey === shortcut.shiftKey &&
-      event.code === shortcut.code
+      matchesKey(event, shortcut.code)
     );
+  }
+
+  function matchesKey(event, expectedCode) {
+    if (event.code === expectedCode) return true;
+    const keyAsCode = normalizeCodeToken(event.key || "");
+    return keyAsCode === expectedCode;
   }
 
   function normalizeCodeToken(token) {
