@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "ArcPack",
+  "version": "0.0.1",
+  "description": "A package of micro extensions to customize my browser.",
+  "permissions": ["storage", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "menu/menu.html",
+    "default_title": "ArcPack"
+  },
+  "icons": {}
+}
